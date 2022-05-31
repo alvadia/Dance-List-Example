@@ -1,0 +1,119 @@
+\documentclass{article}
+% \documentclass[a5paper]{article}\newcommand{\mobile}{}
+% Отдельно предусматривается вёрстка мобильной версии. Благодаря автоматизации, данное действие отличается только раскомментированием строки выше. Обратите внимание, что некоторые мобильные устройства чувствительны к поддерживаемой версии acrobat pdf-файла. В большинстве случаев рекомендуется оптимизировать файл для совместимости с наиболее старой версией pdf.
+\usepackage{amssymb}
+\usepackage{array}
+\usepackage[russian]{babel} % Поддержка русского языка
+\usepackage[some]{background} % Поддержка фонового изображения
+\usepackage{float}
+\usepackage[T2A]{fontenc}
+\usepackage{fontspec} % Для красивых шрифтов. Шрифты хранятся в папке fonts
+\usepackage{hyperref} % Для гиперссылок и интерактивного оглавления
+\usepackage{ifthen}
+\usepackage{indentfirst}
+\usepackage{parskip}
+\usepackage{tabularx}
+\usepackage{titlesec}
+\ifthenelse{\isundefined{\mobile}}{
+    \usepackage[top=2cm, bottom=2cm, outer=2cm, inner=2cm]{geometry}
+}{
+    \pagenumbering{gobble}
+    \usepackage[top=1cm, bottom=1cm, outer=1cm, inner=1cm]{geometry}
+}
+
+\ifthenelse{\isundefined{\mobile}}
+{\setmainfont[Path = ./fonts/,
+ Extension = .ttf,
+ UprightFont = *-Regular,
+ BoldFont = *-Bold,
+ ItalicFont = *-Italic,
+ SmallCapsFont = *-SmallCaps]
+{PT_Serif-Web}}
+{\setmainfont[Path = ./fonts/,
+ Extension = .ttf,
+ UprightFont = *-Regular,
+ BoldFont = *-Bold,
+ ItalicFont = *-Italic,
+ SmallCapsFont = *-SmallCaps]
+{Verdana}}
+
+\begin{document}
+\setlength{\parskip}{0cm plus0.5pt}
+\ifthenelse{\isundefined{\mobile}}
+{\titlespacing{\section}{0pt}{0.5cm}{-0.4cm}}
+{\titlespacing{\section}{0pt}{0.5cm}{-0.4cm}}
+
+\input{config.tex} % Настройки и конфигурации основных команд, используемых далее. Должен идти раньше других input.
+
+% Общий вид команды для танца:
+% \Dance{\Tag}{\Icon}{TOC name (mini)}{Full name}{Content}
+
+% Все типы танцев имеют собственную иконку. Они отличаются по цвету, наполненности и фигуре. Иконки в маленьком размере находятся в содержании, в большом размере - в тексте, перед названием танца.
+\input{dances.tex} % Танцы общего вида
+\input{country-dances.tex} % Контрдансы
+\input{quadrille.tex} % Кадрили
+\input{scd.tex} % Шотландские контрдансы
+\input{waltzes.tex} % Вальсы
+\ifthenelse{\isundefined{\mobile}}{\NoBgThispage}{}
+\thispagestyle{empty}
+\begin{center}
+\includegraphics[width=0.5\textwidth]{images/logo.png}\\ % Логотип студии / организаторов
+{\large \scshape Школа исторических танцев} % Название студии / организаторов
+
+\vspace{2cm}
+
+\textbf{{\LARGE Пример танцвечера}} % Нанзвание танцвечера
+
+\vspace{1.5cm}
+
+\end{center}
+\begin{center}
+\includegraphics[width=0.7\textwidth]{theme.png}\\ % Тематическая картинка к танцвечеру
+\end{center}
+\ifthenelse{\isundefined{\mobile}}{
+\newcommand{\DanceBackground}{\tikz[remember picture,overlay]{ % Фоновые изображения
+\node[opacity=1] at (3, -2.7) {\includegraphics[width=152.8pt,height=116.6pt]{images/frame corner lt.png}};
+\node[opacity=1] at (18.5, -2.7) {\includegraphics[width=151pt,height=123pt]{images/frame corner rt.png}};
+\node[opacity=1] at (18.5, -25) {\includegraphics[width=151.8pt,height=130.8pt]{images/frame corner rb.png}};
+\node[opacity=1] at (3, -25) {\includegraphics[width=152.8pt,height=135.6pt]{images/frame corner lb.png}};
+}}
+\SetBgOpacity{1.0}
+\SetBgAngle{0.0}
+\SetBgScale{1.0}
+\SetBgPosition{current page.north west}
+\SetBgContents{\DanceBackground}
+}{
+% Для мобильной версии используется однотонный бледно-жёлтый фон, который (по некоторым исследованиям) даёт меньшую нагрузку на глаза читателя.
+\pagecolor[rgb]{1.0, 1.0, 0.953125}
+}
+
+\newpage
+\renewcommand*\contentsname{\center{Схемы танцев}}
+\thispagestyle{empty}
+\tableofcontents
+\newpage
+\Large
+
+% Interdance - команда, использующаяся для танца, который включен в программу, но не имеет описания схемы. В таком случае он будет отдельной строкой в тексте документа, и представляется отдельным пунктом в оглавлении.
+\Interdance{Вальс}
+% Пример схемы в виде расклада по счётам. В скобках приводится английский перевод названия танца, или его оригинальное название.
+\PucksDeceit % КД Шалость Пака
+% Пример схемы в виде расклада по тактам, с использованием иллюстраций и гиперссылок на внешние сайты / источники.
+% Показательная ошибка - название танца осталось на текущей странице. Чтобы исправить, раскомментируйте следующую строку.
+% \newpage
+\FrenchQuadrille % Французская кадриль в каре
+\newpage % Принудительное разделение на страницы
+% Отдельные фигуры оформлены с использованием окружения minipage, что позволяет не заботиться о том, что одна фигура окажется на разных страницах. Однако из-за этого может возникать пустое пространство.
+\Bat % Кадриль Летучая мышь
+% Пример "маленького" танца. Схема такого танца должна целиком располагаться на одной странице.
+\Shapelloise % Шапелуаз
+% Пример правильного использования кавычек. Система вёрстки использует "кавычки-лапки" в качестве типографских символов, не стоит их использовать.
+\Interdance{Вальсовый котильон <<Доверие>>}
+\newpage
+% Обычно части танца выделяются заголовком. В некоторых случаях используется окружение NCap, как в большом фигурном вальсе. Это необходимо для логического разделения таким образом, чтобы заполнить наибольшее пространство наименьшими смысловыми единицами.
+\BigWaltz % Большой фигурный вальс
+\Norwegian % Норвежский Круговой
+% Пример шотландского контрданса. Каждый такой SCD снабжается диаграммой (рекомендуется Keith Rose's Diagrams) и схемой типа MiniCribs.
+\ShiftingBobbins % Shifting Bobbins
+\SCDReminder % Памятка по обозначениям SCD
+\end{document}
